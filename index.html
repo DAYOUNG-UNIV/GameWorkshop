@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🃏 2시간 만에 룰 메이커 되기: 대화형 워크숍 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Warm neutrals with a muted teal accent) -->
+    <!-- Application Structure Plan: An interactive "Workshop Dashboard" structure was chosen. It features a sticky top navigation and a clickable timeline for an at-a-glance overview and quick, non-linear access to detailed step-by-step instruction cards. This is more user-friendly for an instructor or student than a static, linear presentation, as it allows them to easily reference specific parts of the workshop flow. -->
+    <!-- Visualization & Content Choices: The primary visualization is an interactive timeline created with HTML/CSS to represent the workshop's 100-minute schedule. Goal: Show flow/pacing. Interaction: Click to scroll to the relevant section. Justification: More engaging and informative than a list. The detailed content is organized into styled cards for clarity. Goal: Organize instructions. Method: Tailwind CSS cards. Justification: Standard, scannable UI pattern. No Chart.js/Plotly needed as the content is procedural, not data-heavy. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .timeline-segment {
+            transition: all 0.3s ease-in-out;
+        }
+        .timeline-segment:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .nav-link.active {
+            color: #14B8A6;
+            font-weight: 700;
+        }
+        .timeline-segment.active {
+            border-color: #14B8A6;
+            border-width: 3px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto max-w-5xl px-4 py-8 md:py-12">
+        
+        <header class="text-center mb-10 md:mb-16">
+            <h1 class="text-4xl md:text-5xl font-black text-stone-900 mb-2">🃏 2시간 만에 룰 메이커 되기</h1>
+            <p class="text-lg md:text-xl text-teal-600 font-bold">"익숙한 52장의 카드에서, 세상에 없던 규칙과 재미를 발견하세요."</p>
+        </header>
+
+        <nav id="navbar" class="sticky top-0 bg-stone-50/80 backdrop-blur-sm py-4 z-10 mb-8 border-b-2 border-stone-200">
+            <ul class="flex justify-center items-center space-x-4 md:space-x-8 text-sm md:text-base font-semibold text-stone-500">
+                <li><a href="#overview" class="nav-link hover:text-teal-600 transition-colors duration-300">개요</a></li>
+                <li><a href="#step1" class="nav-link hover:text-teal-600 transition-colors duration-300">1. 소개</a></li>
+                <li><a href="#step2" class="nav-link hover:text-teal-600 transition-colors duration-300">2. 1차 제작</a></li>
+                <li><a href="#step3" class="nav-link hover:text-teal-600 transition-colors duration-300">3. 테스트</a></li>
+                <li><a href="#step4" class="nav-link hover:text-teal-600 transition-colors duration-300">4. 2차 제작</a></li>
+                <li><a href="#step5" class="nav-link hover:text-teal-600 transition-colors duration-300">5. 마무리</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="overview" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-center mb-4 text-stone-900">워크숍 개요 및 타임라인</h2>
+                <p class="text-center text-stone-600 mb-8 max-w-3xl mx-auto">
+                    이 워크숍에서 여러분은 표준 트럼프 카드를 사용해서 게임의 핵심 규칙을 직접 설계하고, 빠른 테스트와 개선을 통해 아이디어를 발전시키는 방법을 체험하게 될 거예요. 100분 동안 진행됩니다. 아래 타임라인을 클릭해서 각 단계별 상세 내용을 확인해 보세요!
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-teal-600 mb-1">🎯 주제</h3>
+                        <p>핵심 게임 규칙 설계 및 빠른 반복 개선</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-teal-600 mb-1">👥 대상</h3>
+                        <p>게임 개발 실습에 입문하려는 분</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-teal-600 mb-1">📦 준비물</h3>
+                        <p>트럼프 카드</p>
+                    </div>
+                </div>
+
+                <div id="timeline" class="w-full flex rounded-full overflow-hidden shadow-lg border-2 border-stone-200 cursor-pointer text-white font-bold text-sm">
+                    <a href="#step1" data-target="step1" class="timeline-segment text-center py-4" style="background-color: #2dd4bf; width: 15%;"><span class="hidden md:inline">소개</span> (15분)</a>
+                    <a href="#step2" data-target="step2" class="timeline-segment text-center py-4" style="background-color: #38bdf8; width: 25%;"><span class="hidden md:inline">1차 제작</span> (25분)</a>
+                    <a href="#step3" data-target="step3" class="timeline-segment text-center py-4" style="background-color: #fbbf24; width: 20%;"><span class="hidden md:inline">테스트</span> (20분)</a>
+                    <a href="#step4" data-target="step4" class="timeline-segment text-center py-4" style="background-color: #f87171; width: 20%;"><span class="hidden md:inline">2차 제작</span> (20분)</a>
+                    <a href="#step5" data-target="step5" class="timeline-segment text-center py-4" style="background-color: #a78bfa; width: 20%;"><span class="hidden md:inline">마무리</span> (20분)</a>
+                </div>
+            </section>
+
+            <div class="space-y-12">
+                <section id="step1" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200 scroll-mt-24">
+                    <h2 class="text-2xl font-extrabold mb-4"><span class="text-3xl mr-2">1️⃣</span>마음 열기 및 개념 소개 (15분)</h2>
+                    <p class="mb-6 text-stone-600">워크숍의 첫 시작이에요! 가벼운 아이스브레이킹으로 서로 친해지고, 게임 디자인의 핵심 개념을 배우면서 오늘 우리가 무엇을 할 건지 목표를 명확하게 알아봐요.</p>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-teal-400 pl-4">
+                            <h3 class="font-bold">아이스브레이킹 (5분)</h3>
+                            <blockquote class="italic text-stone-700">"트럼프 게임을 할 때, 어떤 카드를 받으면 가장 기분이 좋은가요? 그 이유는 무엇인가요?"</blockquote>
+                        </div>
+                        <div class="border-l-4 border-teal-400 pl-4">
+                            <h3 class="font-bold">핵심 개념 설명 (10분)</h3>
+                            <ul class="list-disc list-inside space-y-2 text-stone-700">
+                                <li><strong>모든 카드는 잠재력을 가진다:</strong> 52장의 카드에 우리가 직접 만든 규칙으로 새로운 의미와 가치를 부여해 볼 거예요.</li>
+                                <li><strong>빠른 실패, 빠른 성공:</strong> 완벽한 게임이 목표가 아니에요. 빠르게 만들고, 테스트하고, 개선하는 과정을 즐겨봐요!</li>
+                                <li><strong>오늘의 목표:</strong> 5분 안에 끝나는 마이크로 게임을 만들고, 친구들의 피드백으로 '필살 규칙'을 추가해서 게임을 진화시킬 거예요.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="step2" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200 scroll-mt-24">
+                    <h2 class="text-2xl font-extrabold mb-4"><span class="text-3xl mr-2">2️⃣</span>1차 규칙 프로토타입 제작 (25분): 뼈대부터 세우기</h2>
+                     <p class="mb-6 text-stone-600">이제 첫 번째 게임을 만들어 볼 시간이에요. 가장 기본적인 요소인 숫자와 문양만 사용해서 게임의 핵심 뼈대를 만들어 볼 거예요. 이 단계에서는 여러분이 직접 게임의 승리 조건과 점수 체계를 설계하게 됩니다.</p>
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-6">
+                        <h3 class="font-bold text-blue-800">✍️ 1차 제작 미션</h3>
+                        <p class="text-blue-700">J, Q, K, A 카드의 특수 능력을 <strong class="font-bold">금지</strong>하고, 순수하게 숫자(A=1, J=11, Q=12, K=13)와 문양의 상호작용만으로 규칙을 만들어 보세요.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xl mb-4 text-stone-800">우리 팀이 결정할 규칙 (아이디어 창고 💡)</h3>
+                        <p class="text-stone-600 mb-6">규칙 만들기가 막막하다면, 아래 아이디어들을 조합하거나 변형해서 우리 팀만의 규칙을 만들어 보세요!</p>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="font-bold text-lg text-blue-600 border-b-2 border-blue-200 pb-2 mb-3">1. 게임 기본 세팅: "어떤 판을 만들까?"</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">라운드 수 정하기</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li><strong>3 라운드:</strong> 초스피드로 끝나는 게임!</li>
+                                            <li><strong>5 라운드:</strong> 조금 더 생각할 시간이 필요한 게임!</li>
+                                            <li><strong>손에 든 카드 다 쓸 때까지:</strong> 카드를 아껴 써야 하는 게임!</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">시작 카드 수 정하기</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li><strong>3장:</strong> 매번 신중한 선택이 필요해요!</li>
+                                            <li><strong>5장:</strong> 다양한 전략을 펼칠 수 있어요!</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-lg text-blue-600 border-b-2 border-blue-200 pb-2 mb-3">2. 라운드 승리 규칙: "이번 라운드는 누가 이길까?"</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">단순 숫자 비교</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>가장 높은 숫자를 낸 사람이 승리</li>
+                                            <li>가장 낮은 숫자를 낸 사람이 승리</li>
+                                            <li>특정 숫자(예: 7)에 가장 가까운 숫자를 낸 사람이 승리</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">문양의 상호작용</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>미리 정한 '강한 문양'(예: 스페이드♠)을 낸 사람이 승리</li>
+                                            <li>가장 많이 나온 문양을 낸 사람들 중, 숫자가 가장 높은 사람이 승리</li>
+                                            <li>모두 다른 문양을 냈다면, 하트♥를 낸 사람이 승리</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg col-span-1 md:col-span-2">
+                                        <p class="font-semibold">특수 조건</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>같은 숫자가 2장 이상 나오면, 그 사람들이 함께 승리</li>
+                                            <li>모두 짝수거나 홀수면, 가장 높은 숫자가 승리. 섞여있으면 가장 낮은 숫자가 승리</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-lg text-blue-600 border-b-2 border-blue-200 pb-2 mb-3">3. 점수 획득 규칙: "이기면 무엇을 얻을까?"</h4>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">고정 점수</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>라운드에서 이기면 그냥 1점 획득</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">가변 점수</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>이번 라운드에 나온 카드 장수만큼 점수 획득</li>
+                                            <li>내가 낸 카드의 숫자만큼 점수 획득</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">카드 수집</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>라운드 승자가 이번 라운드에 나온 카드를 모두 가져감</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div>
+                                <h4 class="font-bold text-lg text-blue-600 border-b-2 border-blue-200 pb-2 mb-3">4. 최종 승리 조건: "어떻게 하면 최종 우승할까?"</h4>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">점수 경쟁</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>정해진 라운드 후, 총점이 가장 높은 사람이 승리</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <p class="font-semibold">수집 목표 달성</p>
+                                        <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                            <li>정해진 라운드 후, 카드를 가장 많이 모은 사람이 승리</li>
+                                            <li>정해진 라운드 후, 특정 문양(예: 다이아몬드◆) 카드를 가장 많이 모은 사람이 승리</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-bold text-lg text-blue-600 border-b-2 border-blue-200 pb-2 mb-3">5. 게임 이름 짓기: "우리 게임의 정체성은?"</h4>
+                                <div class="bg-blue-50 p-4 rounded-lg">
+                                    <p class="font-semibold">모든 규칙이 정해졌나요? 그렇다면 우리 게임의 특징이 잘 드러나는 멋진 이름을 붙여주세요!</p>
+                                    <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                        <li><strong>예시 1:</strong> '가장 높은 숫자'가 이기는 단순한 규칙이라면? → <strong class="font-bold">'하이 넘버(High Number)'</strong></li>
+                                        <li><strong>예시 2:</strong> '같은 문양'을 모으는 게 중요하다면? → <strong class="font-bold">'수트 컬렉터(Suit Collector)'</strong></li>
+                                        <li><strong>예시 3:</strong> '7'에 가까운 숫자를 내야 한다면? → <strong class="font-bold">'럭키 세븐(Lucky 7)'</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-8 font-semibold text-blue-600 text-center">▶ 위 아이디어들을 참고해서 우리 팀의 규칙을 명확하게 작성해 주세요! (20분)</p>
+                    </div>
+                </section>
+
+                <section id="step3" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200 scroll-mt-24">
+                    <h2 class="text-2xl font-extrabold mb-4"><span class="text-3xl mr-2">3️⃣</span>1차 초고속 플레이 테스트 및 피드백 (20분)</h2>
+                    <p class="mb-6 text-stone-600">우리가 만든 게임, 재미있을까요? 직접 확인해볼 시간이에요. 다른 팀에게 우리가 만든 규칙을 주고 플레이하게 해서 솔직한 피드백을 받아보는 아주 중요한 단계랍니다. 짧고 빠른 테스트를 여러 번 반복하면서 우리 게임의 장점과 단점을 찾아내 보세요.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="border-l-4 border-amber-400 pl-4">
+                            <h3 class="font-bold">규칙 교환 및 플레이 (15분)</h3>
+                            <p class="text-stone-700">옆 팀에게 '규칙 종이'와 '카드 덱'을 넘겨주세요. 옆 팀의 게임을 최소 3번 이상 반복해서 플레이해 보세요.</p>
+                        </div>
+                        <div class="border-l-4 border-amber-400 pl-4">
+                            <h3 class="font-bold">핵심 피드백 전달 (5분)</h3>
+                            <p class="text-stone-700">플레이해 본 소감을 포스트잇에 한 문장으로 적어서 전달해 주세요.</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 bg-amber-50 border border-amber-200 p-6 rounded-lg">
+                        <h3 class="font-bold text-xl mb-4 text-stone-800">피드백 아이디어 창고 🤔</h3>
+                        <p class="text-stone-600 mb-4">어떤 피드백을 줘야 할지 막막하다면, 아래 질문들에 답하면서 게임을 플레이해 보세요. 더 좋은 피드백을 줄 수 있을 거예요!</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold text-amber-800">🧐 이해와 명확성</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li>규칙을 처음 읽었을 때 바로 이해가 됐나요? 헷갈리는 부분은 없었나요?</li>
+                                    <li>매 라운드 승자를 가리는 과정이 복잡하지는 않았나요?</li>
+                                    <li><strong>피드백 예시:</strong> "라운드 승리 규칙 2번이 조금 헷갈려요. '가장 많이 나온 문양'이 여러 개일 땐 어떻게 되는지 추가 설명이 필요해요."</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-amber-800">😆 재미와 경험</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li>게임을 하면서 가장 재미있거나 짜릿했던 순간은 언제였나요?</li>
+                                    <li>반대로 가장 지루하거나 답답했던 순간은 언제였나요?</li>
+                                    <li><strong>피드백 예시:</strong> "같은 문양이 2장 나와서 낮은 숫자로 이겼을 때 정말 짜릿했어요! 이 부분이 핵심 재미 같아요."</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-amber-800">⚖️ 공정성과 밸런스</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li>게임이 공정하다고 느껴졌나요? 아니면 운이 너무 크게 작용했나요?</li>
+                                    <li>무조건 이기는 '필승 전략'이 있지는 않았나요? (예: 높은 숫자만 내면 이기는 등)</li>
+                                    <li><strong>피드백 예시:</strong> "처음에 높은 숫자 카드를 많이 받은 사람이 너무 유리해서 역전할 기회가 거의 없었어요."</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="step4" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200 scroll-mt-24">
+                    <h2 class="text-2xl font-extrabold mb-4"><span class="text-3xl mr-2">4️⃣</span>2차 규칙 프로토타입 제작 (20분): 필살기를 깨워라!</h2>
+                    <p class="mb-6 text-stone-600">친구들에게 받은 피드백을 바탕으로 우리 게임의 문제점을 해결하고 더 재미있게 업그레이드해 봅시다! 이제 J, Q, K, A 카드에 특별한 능력을 부여해서 게임을 한 방에 뒤집을 수 있는 멋진 '필살 규칙'을 만들어 볼 거예요.</p>
+                     <div class="bg-red-50 border border-red-200 p-4 rounded-lg mb-6">
+                        <h3 class="font-bold text-red-800">🚀 규칙 진화 미션</h3>
+                        <p class="text-red-700">받은 피드백을 해결하기 위해, J, Q, K, A 카드 중 <strong class="font-bold">최소 2개</strong>에 판을 뒤집을 만한 '필살 규칙(특수 능력)'을 부여해 보세요.</p>
+                    </div>
+                    <div class="mt-8 bg-red-50 border border-red-200 p-6 rounded-lg">
+                        <h3 class="font-bold text-xl mb-4 text-stone-800">필살 규칙 아이디어 창고 ⚡️</h3>
+                        <p class="text-stone-600 mb-4">어떤 능력을 줘야 할지 고민된다면, 아래 아이디어들에서 힌트를 얻어 보세요. 받은 피드백을 해결할 수 있는 능력이 뭘까요?</p>
+                        <div class="grid md:grid-cols-2 gap-x-6 gap-y-4">
+                            <div>
+                                <h4 class="font-semibold text-red-800">🔄 판 흔들기 (규칙 변경)</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li><strong>J (Jack):</strong> "이번 라운드는 가장 낮은 숫자가 승리한다!" (높은 숫자가 너무 유리할 때)</li>
+                                    <li><strong>Q (Queen):</strong> "이번 라운드는 무승부로 처리하고, 다음 라운드 점수를 2배로 한다." (긴장감을 높이고 싶을 때)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-red-800">🤝 상호작용 (견제와 협력)</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li><strong>K (King):</strong> "다른 사람 한 명을 지목해, 그 사람이 낸 카드의 능력을 무효화한다." (특정 카드가 너무 강력할 때)</li>
+                                    <li><strong>Q (Queen):</strong> "라운드 시작 전, 다른 사람과 손에 든 카드 1장을 바꿀 수 있다." (손패 운을 완화하고 싶을 때)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-red-800">🔍 정보와 자원 (전략성 강화)</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li><strong>A (Ace):</strong> "이번 라운드에 승리하면, 카드 덱에서 카드를 1장 더 가져온다." (선택지를 늘리고 싶을 때)</li>
+                                    <li><strong>J (Jack):</strong> "다른 모든 사람의 손패를 몰래 확인한 후, 자신의 카드를 낸다." (심리전을 강화하고 싶을 때)</li>
+                                </ul>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-red-800">🚫 능력 무효화 (카운터)</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-700 mt-1">
+                                    <li><strong>K (King):</strong> "이번 라운드에 나온 모든 J, Q, A 카드의 특수 능력을 무시하고, 숫자만 비교한다." (특수 능력이 너무 많아 혼란스러울 때)</li>
+                                    <li><strong>A (Ace):</strong> "A 카드는 다른 어떤 카드의 능력에도 영향을 받지 않는다." (확실한 카드가 필요할 때)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="step5" class="bg-white p-8 rounded-2xl shadow-lg border border-stone-200 scroll-mt-24">
+                    <h2 class="text-2xl font-extrabold mb-4"><span class="text-3xl mr-2">5️⃣</span>최종 플레이 및 워크숍 마무리 (20분)</h2>
+                    <p class="mb-6 text-stone-600">드디어 최종 버전이 완성됐어요! 특수 능력이 추가된 우리 게임을 직접 플레이하면서 얼마나 더 재미있어졌는지 느껴보고, 오늘 워크숍 전체 과정을 돌아보면서 게임 디자인이 무엇인지 깊이 있게 배워보는 시간이에요.</p>
+                    <div class="border-l-4 border-purple-400 pl-4 space-y-4">
+                        <h3 class="font-bold">공유 및 회고</h3>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>최종 플레이 (5분):</strong> 진화된 우리 팀의 게임을 직접 플레이하며 재미의 변화를 느껴보세요.</li>
+                            <li><strong>공유 (10분):</strong> 우리 팀의 게임이 어떻게 '숫자뿐인 게임'에서 '특수 능력이 난무하는 심리전 게임'으로 변했는지 발표해 봅시다.</li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 bg-purple-50 border border-purple-200 p-6 rounded-lg">
+                        <h3 class="font-bold text-xl mb-4 text-stone-800">✨ 사례 연구: 세계 무대로!</h3>
+                        <p class="text-stone-600 mb-4">오늘 우리가 한 경험이 실제 게임 디자이너들이 일하는 방식과 똑같다는 사실, 알고 있었나요? 전 세계의 디자이너들도 이렇게 아이디어를 내고, 테스트하고, 발전시킨답니다.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold text-purple-800">👑 레지사이드 (Regicide)</h4>
+                                <p class="text-sm text-stone-700 mt-1">이 게임은 평범한 트럼프 카드로 즐기는 협력 판타지 게임이에요. J, Q, K를 물리쳐야 할 '몬스터'로, 하트♥ 카드를 '회복' 능력으로 바꾸는 등 모든 카드에 새로운 의미를 부여했죠. <strong class="text-purple-600">오늘 여러분이 J 카드에 '역전'의 능력을 부여한 것처럼 말이에요!</strong></p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-purple-800">🏆 54-Card Game Design Contest</h4>
+                                <p class="text-sm text-stone-700 mt-1">'보드게임 긱'이라는 세계 최대 보드게임 커뮤니티에서는 매년 트럼프 카드 한 덱만으로 최고의 게임을 가리는 디자인 대회가 열려요. 오늘 여러분이 만든 게임의 아이디어를 더 발전시켜서, 이런 세계 무대에 도전해 보는 건 어떨까요?</p>
+                                <a href="https://boardgamegeek.com/thread/3536713/2025-54-card-game-design-contest" target="_blank" rel="noopener noreferrer" class="mt-2 inline-block bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors">
+                                    콘테스트 구경가기
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="mt-8 border-t-2 pt-6">
+                        <h3 class="font-bold text-xl text-stone-800">최종 메시지</h3>
+                        <p class="text-stone-700 mt-2">게임 디자인은 정답이 없어요. 주어진 조건 속에서 규칙을 비틀고 다듬어가는 과정 그 자체랍니다. 여러분의 창의적인 도전을 응원합니다!</p>
+                    </div>
+                    <div class="mt-12 bg-green-50 border-2 border-dashed border-green-300 p-6 rounded-2xl">
+                        <h3 class="font-bold text-2xl mb-4 text-green-800 text-center">🚀 다음 시간 미션 예고: 나만의 시그니처 미니 게임 기획!</h3>
+                        <p class="text-stone-700 text-center mb-6">여러분은 워크숍에서 트럼프 카드를 가지고 3라운드짜리 마이크로 게임을 만들고, 피드백을 통해 특수 능력을 부여하며 게임을 진화시키는 경험을 했습니다.<br>이제 그 경험을 바탕으로, 아래 두 가지 테마 중 하나를 선택하여 여러분만의 '시그니처 미니 게임' 규칙을 기획해 보세요.</p>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                            <h4 class="font-bold text-lg text-green-700 mb-4">1단계: 테마 선택 (택 1)</h4>
+                            <div class="space-y-6">
+                                <div>
+                                    <h5 class="font-bold text-xl">A) 최후의 생존자 (The Last Survivor)</h5>
+                                    <div class="mt-2 p-4 bg-stone-50 rounded-lg">
+                                        <h6 class="font-semibold text-stone-700">규칙 뼈대: 경쟁적 자원 획득</h6>
+                                        <p class="text-sm text-stone-600 mt-1">이 테마의 핵심은 <strong>'나의 이득'</strong>을 위해 다른 사람과 <strong>'경쟁'</strong>하는 것입니다. 모든 상호작용은 간접적이며, 오직 자신의 승리만을 목표로 합니다. 나의 승리가 곧 다른 누군가의 패배가 되는 제로섬(Zero-Sum) 경쟁의 본질을 보여줍니다.</p>
+                                    </div>
+                                    <div class="mt-2 p-4 bg-stone-50 rounded-lg">
+                                        <h6 class="font-semibold text-stone-700">완성형 게임 예시: 최후의 보급품 (The Last Supply Drop)</h6>
+                                        <p class="text-sm text-stone-600 mt-1">매 라운드 떨어지는 보급품(카드)을 차지하기 위해, 다른 생존자들을 견제하며 자신의 카드를 전략적으로 소모하여 가장 많은 점수(식량)를 확보하는 생존 경쟁 게임.</p>
+                                        <details class="text-xs mt-2">
+                                            <summary class="cursor-pointer font-semibold text-green-600">상세 규칙 보기</summary>
+                                            <div class="mt-2 space-y-2 text-stone-700 border-t pt-2">
+                                                <p><strong>승리 조건:</strong> 총 4라운드 종료 후, 획득한 카드의 숫자 합이 가장 높은 플레이어가 승리. (단, 획득한 카드 중 스페이드(♠) 문양은 점수에서 제외)</p>
+                                                <p><strong>핵심 규칙:</strong> ①'보급품 더미'에서 카드 공개 → ②손에서 카드 1장씩 내기 → ③가장 높은 숫자부터 순서대로 보급품 가져가기. (단, 같은 문양을 내면 둘 다 보급품 획득 불가)</p>
+                                                <p><strong>필살 규칙 (J):</strong> J를 내면 보급품을 못 얻는 대신, 1등 플레이어도 보급품을 못 얻게 막는다. (사보타주)</p>
+                                                <p><strong>필살 규칙 (Q):</strong> Q를 내면 보급품 대신 덱에서 직접 1장을 점수로 가져온다. (비상식량)</p>
+                                            </div>
+                                        </details>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-xl">B) 위험한 거래 (The Dangerous Deal)</h5>
+                                     <div class="mt-2 p-4 bg-stone-50 rounded-lg">
+                                        <h6 class="font-semibold text-stone-700">규칙 뼈대: 상호 의존적 신뢰</h6>
+                                        <p class="text-sm text-stone-600 mt-1">이 테마의 핵심은 점수를 얻기 위해 반드시 다른 사람과 <strong>'직접 상호작용'</strong>해야 한다는 점입니다. 협력하면 다 같이 이득을 볼 수도 있지만, 언제나 <strong>'배신'</strong>의 위험이 존재합니다. 나의 결정이 상대에게, 상대의 결정이 나에게 직접적인 영향을 미치는 상호 의존성과 신뢰의 딜레마를 보여줍니다.</p>
+                                    </div>
+                                    <div class="mt-2 p-4 bg-stone-50 rounded-lg">
+                                        <h6 class="font-semibold text-stone-700">완성형 게임 예시: 그림자 상인 (Shadow Merchants)</h6>
+                                        <p class="text-sm text-stone-600 mt-1">다른 상인과 카드를 교환하여 같은 숫자 조합(페어)을 만들어 점수를 얻되, '저주받은 상품(스페이드)'을 남에게 떠넘기거나 받지 않도록 눈치와 블러핑을 사용하는 협상 게임.</p>
+                                        <details class="text-xs mt-2">
+                                            <summary class="cursor-pointer font-semibold text-green-600">상세 규칙 보기</summary>
+                                            <div class="mt-2 space-y-2 text-stone-700 border-t pt-2">
+                                                <p><strong>승리 조건:</strong> 총 5라운드 종료 후, (같은 숫자 페어 1개당 +5점) - (손에 남은 스페이드 1장당 -2점)으로 계산하여 점수가 가장 높은 플레이어 승리.</p>
+                                                <p><strong>핵심 규칙:</strong> ①거래할 카드 1장 내려놓기 → ②거래할 파트너 지목하기 → ③서로 지목했으면 카드 교환 → ④덱에서 카드 1장 보충.</p>
+                                                <p><strong>필살 규칙 (J):</strong> J를 내면 다른 두 사람을 강제로 거래시키고 나는 보너스 점수를 얻는다. (중개인)</p>
+                                                <p><strong>필살 규칙 (A):</strong> A로 거래가 성사되면, 상대 카드는 받지만 나는 A 대신 덱에서 뽑은 새 카드를 준다. (계약 파기)</p>
+                                            </div>
+                                        </details>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                            <h4 class="font-bold text-lg text-green-700">2단계: 게임 규칙 기획</h4>
+                            <p class="text-stone-600 mt-2 mb-4">선택한 테마에 맞춰, 아래 항목들을 포함한 <strong>'게임 규칙 설명서'</strong>를 1장으로 작성하세요.</p>
+                            <ul class="space-y-3 text-sm">
+                                <li><strong>게임 제목:</strong> 여러분의 게임에 어울리는 창의적인 이름을 붙여주세요.</li>
+                                <li><strong>게임 컨셉 (한 문장):</strong> 이 게임이 어떤 경험을 주는 게임인지 한 문장으로 요약해 주세요.</li>
+                                <li><strong>승리 조건:</strong> 3~5 라운드 후, 어떤 플레이어가 최종적으로 승리하는지 명확하게 설명해 주세요.</li>
+                                <li><strong>핵심 규칙:</strong> 라운드 진행 방식과 카드 상호작용 규칙을 설명해 주세요.</li>
+                                <li class="p-3 bg-green-100 rounded-md">
+                                    <strong class="text-green-800">테마를 살리는 필살 규칙 (가장 중요!):</strong><br>
+                                    J, Q, K, A 카드 중 최소 2개에 여러분이 선택한 테마를 가장 잘 살릴 수 있는 특수 능력을 부여하세요. 각 능력이 왜 이 테마와 어울리는지, 어떤 재미를 만들어내는지 그 <strong class="underline">이유를 반드시 함께 설명</strong>해야 합니다.
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="text-center mt-6 font-bold text-green-700">다음 수업 시간에 이어서 진행할테니, 집에서 각자 아이디어를 생각해보고 오세요!</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const timelineSegments = document.querySelectorAll('.timeline-segment');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+
+                        timelineSegments.forEach(segment => {
+                            segment.classList.remove('active');
+                            if (segment.dataset.target === id) {
+                                segment.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
